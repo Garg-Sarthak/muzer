@@ -1,6 +1,8 @@
 import { prismaClient } from "@/app/lib/db";
 import { currentUser } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
+//@ts-ignore
+import youtubesearchapi from "youtube-search-api";
 import {z} from "zod";
 
 const YT_REGEX = new RegExp(
@@ -13,7 +15,6 @@ const createStreamSchema = z.object({
 export async function POST(req : NextRequest){
 
     const clerkUser = await currentUser();
-    
     if (!clerkUser){
         return NextResponse.json({
             message : "Unauthenticated"
@@ -36,13 +37,20 @@ export async function POST(req : NextRequest){
 
         const extractedId = data.url.split("?v=")[1] ;
 
+        const res = await youtubesearchapi.GetVideoDetails(extractedId);
+
+        const thumbnails = res.thumbnail.thumbnails;
+        thumbnails.sort((a: {width: number}, b: {width: number}) => a.width < b.width ? -1 : 1);
 
         const stream = await prismaClient.stream.create({
             data : {
                 userId : clerkUser.id,
                 extractedId,
                 url : data.url,
-                type : "Youtube"
+                type : "Youtube",
+                title : res.title ?? "video unavailable",
+                smallImg : thumbnails[0].url ?? "https://plus.unsplash.com/premium_photo-1682310096066-20c267e20605?q=80&w=912&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                bigImg : thumbnails[thumbnails.length - 1].url ?? "https://plus.unsplash.com/premium_photo-1682310096066-20c267e20605?q=80&w=912&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             }
         })
         return NextResponse.json({

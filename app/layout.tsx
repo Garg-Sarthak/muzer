@@ -22,33 +22,11 @@ export default function RootLayout({
       <html lang="en">
         <body className={inter.className}>
           <header>
-            <SignedOut>
-              <SignInButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
+            
           </header>
           <main>{children}</main>
         </body>
       </html>
     </ClerkProvider>
-    // <ClerkProvider>
-    //     <html lang="en">
-    //       <body className={inter.className}>
-    //       <header>
-    //         <SignedOut>
-    //           <SignInButton/>
-    //         </SignedOut>
-    //         <SignedIn>
-    //           <UserButton/>
-    //         </SignedIn>
-    //       </header>
-    //         <main>
-    //           {children}
-    //         </main>
-    //     </body>
-    //   </html>
-    // <ClerkProvider/>
   );
 }
