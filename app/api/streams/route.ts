@@ -2,7 +2,6 @@ import { prismaClient } from "@/app/lib/db";
 import { currentUser } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import {z} from "zod";
-// const YT_REGEX = new RegExp("^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(?:-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|live\/|v\/)?)([\w\-]+)(\S+)?$");
 
 const YT_REGEX = new RegExp(
     "^((https?:)?\\/\\/)?((www|m)\\.)?(youtube\\.com|youtu.be)\\/(watch\\?v=|embed\\/|v\\/|playlist\\?list=|channel\\/|user\\/|\\S+)?([\\w\\-]+)(\\S+)?$"
@@ -12,7 +11,8 @@ const createStreamSchema = z.object({
 })
 
 export async function POST(req : NextRequest){
-    const clerkUser = await currentUser(); // clerk here
+
+    const clerkUser = await currentUser();
     
     if (!clerkUser){
         return NextResponse.json({
@@ -61,16 +61,17 @@ export async function POST(req : NextRequest){
 }
 
 export async function GET(req : NextRequest){
-    const creatorId = await req.nextUrl.searchParams.get("creatorId");
+    const creatorId = req.nextUrl.searchParams.get("creatorId");
+    console.log(creatorId);
 
     try{
-        const streams = prismaClient.stream.findMany({
+        const streams = await prismaClient.stream.findMany({
             where : {
                 userId : creatorId ?? ""
             }
         })
         return NextResponse.json({
-            streams
+            streams 
         })
     }catch(e){
         return NextResponse.json({

@@ -5,12 +5,12 @@ import { NextRequest, NextResponse } from "next/server"
 import {z} from "zod";
 
 const UpvoteSchema = z.object({
-    streamId : z.string(),
+    streamId : z.string()
 })
 
 export async function POST(req : NextRequest){
-    const clerkUser = await currentUser(); // clerk here
-    // const mydata = clerkUser?.emailAddresses[0].emailAddress;
+    
+    const clerkUser = await currentUser();
     
     if (!clerkUser){
         return NextResponse.json({
@@ -20,19 +20,6 @@ export async function POST(req : NextRequest){
         })
     }
 
-    // const user = await prismaClient.user.findFirst({
-    //     where : {
-    //         email : clerkUser.emailAddresses[0].emailAddress
-    //     }
-    // })
-
-    // if (!user){
-    //     return NextResponse.json({
-    //         message : "Unauthenticated"
-    //     },{
-    //         status : 403
-    //     })
-    // }
 
     try{
         const data = UpvoteSchema.parse(await req.json());
@@ -45,7 +32,7 @@ export async function POST(req : NextRequest){
             }
         })
         return NextResponse.json({
-            message : "Stream Downvoted",
+            message : "Upvote removed",
             id : downvote.id 
         },{
             status : 200
@@ -53,7 +40,7 @@ export async function POST(req : NextRequest){
 
     }catch(e){
         return NextResponse.json({
-            message : "Error while removing upvote"
+            message : "Can't remove upvote"
         },{
             status : 411
         })
