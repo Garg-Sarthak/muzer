@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 // import {Providers} from "./Providers";
-import { ClerkProvider, SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { ClerkProvider, SignedIn, SignedOut, SignInButton, SignOutButton, UserButton } from "@clerk/nextjs";
+import Btn from "./components/Btn";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -22,7 +23,6 @@ export default function RootLayout({
       <html lang="en">
         <body className={inter.className}>
           <header>
-            
           </header>
           <main>{children}</main>
         </body>

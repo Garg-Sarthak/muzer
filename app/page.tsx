@@ -84,7 +84,8 @@
 import { Button } from "@/components/ui/button"
 import { Music, Play, Users } from "lucide-react"
 import Link from "next/link"
-import { SignUpButton } from "@clerk/nextjs"
+import { SignedIn, SignedOut, SignUpButton } from "@clerk/nextjs"
+import Appbar from "./components/Appbar"
 
 export default function LandingPage() {
   return (
@@ -101,6 +102,7 @@ export default function LandingPage() {
           <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
             Contact
           </Link>
+          <Appbar/>
         </nav>
       </header>
       <main className="flex-1">
@@ -136,11 +138,18 @@ export default function LandingPage() {
                 Start your stream, share your unique FanTunes link, and let your audience vote on the next song. 
                 It's that simple to create a collaborative music experience.
               </p>
-              <SignUpButton mode="modal">
-                <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
-                  Join FanTunes
-                </Button>
-              </SignUpButton>
+              <SignedOut>
+                <SignUpButton mode="modal" forceRedirectUrl="/dasboard">
+                  <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
+                    Join FanTunes
+                  </Button>
+                </SignUpButton>
+              </SignedOut>
+              <SignedIn>
+                  <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
+                    Welcome to FanTunes
+                  </Button>
+              </SignedIn>
             </div>
           </div>
         </section>
